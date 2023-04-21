@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-img-1 {
+  background-size: contain;
+  width: 100%;
+}
