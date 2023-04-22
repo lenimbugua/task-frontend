@@ -41,8 +41,8 @@ This is a Vite Vue project that utilizes several third-party libraries to create
 
 1. Clone this repository to your local machine.
 2. Install dependencies by running `pnpm install`.
-3. Run the application with `pnpm run dev`.
-4. Navigate to the address displayed on your cli in your web browser to view the application.
+3. Run the application with `pnpm dev`.
+4. Navigate to the address displayed on your terminal in your web browser to view the application.
 
 ## Usage
 
