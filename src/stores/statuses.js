@@ -96,14 +96,13 @@ export const useStatusStore = defineStore("status-store", {
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().delete(`/status/${id.id}`, {
+        const response = await API().delete(`/status/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         this.pending = false;
-        this.statuses = response.data.data;
-        console.log(this.statuses);
+        console.log(response);
         this.responseOK = true;
       } catch (error) {
         this.pending = false;
