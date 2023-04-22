@@ -15,30 +15,30 @@ import { useStatusStore } from "../stores/statuses";
 const router = useRouter();
 const { user } = storeToRefs(useLoginStore());
 
-const { fieldErrors, nonFieldErrors, pending, responseOK } = storeToRefs(
-  useTaskStore()
-);
+const { fieldErrors, nonFieldErrors, pending, responseOK, selectedTask } =
+  storeToRefs(useTaskStore());
 const { selectedStatus } = storeToRefs(useStatusStore());
 
 const { addTask, fetchTasks, clearErrors } = useTaskStore();
 
-const name = ref("");
-const description = ref("");
-const dueDate = ref(getTodayDate());
+const task = ref(selectedTask.value);
+
+console.log(task.value);
 
 const createStatus = async () => {
+  console.log(selectedStatus.value);
   const token = user.value.token;
   const body = {
-    name: name.value,
-    description: description.value,
-    due_date: dueDate.value,
+    name: task.value.name,
+    description: task.value.description,
+    due_date: task.value.due_date,
     status_id: selectedStatus.value,
   };
   await addTask(body, token);
 
   if (responseOK.value) {
     await fetchTasks(token);
-    swal.fire("Task Created!", "Good Job");
+    swal.fire("Task updated!", "Good Job");
     router.push({ name: "tasks" });
   }
 };
@@ -46,7 +46,6 @@ const createStatus = async () => {
 onBeforeUnmount(() => {
   clearErrors();
 });
-
 </script>
 
 <template>
@@ -80,7 +79,7 @@ onBeforeUnmount(() => {
           >Name</label
         ><input
           id="name"
-          v-model="name"
+          v-model="task.name"
           type="text"
           :class="{
             'ring-1 ring-red-500 bg-red-50': fieldHasError(fieldErrors, 'name'),
@@ -99,7 +98,7 @@ onBeforeUnmount(() => {
           >Description</label
         ><input
           id="description"
-          v-model="description"
+          v-model="task.description"
           type="text"
           :class="{
             'ring-1 ring-red-500 bg-red-50': fieldHasError(
@@ -123,7 +122,7 @@ onBeforeUnmount(() => {
 
         <input
           id="start"
-          v-model="dueDate"
+          v-model="task.due_date"
           class="px-5 flex items-center appearance-none text-slate-900 bg-gray-50 rounded-md w-full h-10 shadow-sm sm:text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500 focus:bg-white ring-1 ring-slate-200"
           :class="{
             'ring-1 border-red-500 bg-red-50': fieldHasError(
@@ -132,7 +131,8 @@ onBeforeUnmount(() => {
             ),
           }"
           type="date"
-          name="trip-start"
+          pattern="\d{4}-\d{2}-\d{2}"
+          name="due_date"
           :min="getTodayDate()"
           max="2023-12-31"
         />

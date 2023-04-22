@@ -13,7 +13,7 @@ import swal from "sweetalert2";
 const router = useRouter();
 
 const { fetchStatuses, setSelectedStatus, deleteStatus } = useStatusStore();
-const { statuses, responseOK } = storeToRefs(useStatusStore());
+const { statuses, responseOK, pending } = storeToRefs(useStatusStore());
 const { user: authUser } = storeToRefs(useLoginStore());
 
 const token = authUser.value.token;

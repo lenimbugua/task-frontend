@@ -8,11 +8,15 @@ import Dashboard from "@/views/Dashboard.vue";
 import Nav from "@/views/Nav.vue";
 
 import Users from "@/views/Users.vue";
+
 import Tasks from "@/views/Tasks.vue";
+import AddTask from "@/views/AddTask.vue";
+import UpdateTask from "@/views/UpdateTask.vue";
+import AssignTask from "@/views/AssignTask.vue";
+
 import Status from "@/views/Status.vue";
 import AddStatus from "@/views/AddStatus.vue";
 import UpdateStatus from "@/views/UpdateStatus.vue";
-import AssignTask from "@/views/AssignTask.vue";
 
 const routes = [
   { path: "/", name: "login", component: Login },
@@ -45,6 +49,18 @@ const routes = [
         name: "tasks",
         component: Tasks,
         meta: { title: "Tasks", requiresAuth: true },
+      },
+      {
+        path: "add-task",
+        name: "add-task",
+        component: AddTask,
+        meta: { title: "Add Task", requiresAuth: true },
+      },
+      {
+        path: "update-task",
+        name: "update-task",
+        component: UpdateTask,
+        meta: { title: "Update Task", requiresAuth: true },
       },
       {
         path: "status",
