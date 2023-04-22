@@ -18,7 +18,7 @@ export function getFormErrorsByField(error, field) {
   return "";
 }
 
-export function hasErrorForField(error, field) {
+export function fieldHasError(error, field) {
   console.log(error);
   console.log(field);
   /*

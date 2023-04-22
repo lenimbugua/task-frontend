@@ -1,7 +1,7 @@
 <script setup>
 import Spin from "./Spin.vue";
 import { useCreateUserStore } from "../stores/register";
-import { getFormErrorsByField, hasErrorForField } from "../utils/errors";
+import { getFormErrorsByField, fieldHasError } from "../utils/errors";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
@@ -42,10 +42,7 @@ const register = async () => {
         name="name"
         placeholder="Full Names"
         :class="{
-          'ring-1 ring-red-500 bg-red-50': hasErrorForField(
-            fieldErrors,
-            'name'
-          ),
+          'ring-1 ring-red-500 bg-red-50': fieldHasError(fieldErrors, 'name'),
         }"
         class="mt-2 appearance-none text-slate-900 bg-white rounded-md block w-full px-3 h-10 shadow-sm sm:text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500 border"
         required
@@ -62,10 +59,7 @@ const register = async () => {
         name="email"
         placeholder="Email"
         :class="{
-          'ring-1 ring-red-500 bg-red-50': hasErrorForField(
-            fieldErrors,
-            'email'
-          ),
+          'ring-1 ring-red-500 bg-red-50': fieldHasError(fieldErrors, 'email'),
         }"
         class="mt-2 appearance-none text-slate-900 bg-white rounded-md block w-full px-3 h-10 shadow-sm sm:text-sm focus:outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500 border"
         required
@@ -83,7 +77,7 @@ const register = async () => {
         name="password"
         placeholder="Password"
         :class="{
-          'ring-1 ring-red-500 bg-red-50': hasErrorForField(
+          'ring-1 ring-red-500 bg-red-50': fieldHasError(
             fieldErrors,
             'Password'
           ),

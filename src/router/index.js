@@ -10,6 +10,8 @@ import Nav from "@/views/Nav.vue";
 import Users from "@/views/Users.vue";
 import Tasks from "@/views/Tasks.vue";
 import Status from "@/views/Status.vue";
+import AddStatus from "@/views/AddStatus.vue";
+import UpdateStatus from "@/views/UpdateStatus.vue";
 import AssignTask from "@/views/AssignTask.vue";
 
 const routes = [
@@ -49,6 +51,18 @@ const routes = [
         name: "status",
         component: Status,
         meta: { title: "Status", requiresAuth: true },
+      },
+      {
+        path: "add-status",
+        name: "add-status",
+        component: AddStatus,
+        meta: { title: "Add Status", requiresAuth: true },
+      },
+      {
+        path: "update-status",
+        name: "update-status",
+        component: UpdateStatus,
+        meta: { title: "Update Status", requiresAuth: true },
       },
     ],
   },

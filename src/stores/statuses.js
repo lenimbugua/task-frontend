@@ -12,27 +12,23 @@ export const useStatusStore = defineStore("status-store", {
   }),
 
   actions: {
-    async updateStatus(body, accessToken) {
+    async addStatus(body, accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().put(
-          `/status/${body.id}`,
-          { body },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await API().post(`/status`, body, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         this.pending = false;
-        this.statuses = response.data.data;
-        console.log(this.statuses);
+        console.log(response);
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
         if (error.response.status == 400) {
           this.fieldErrors = error.response.data.errors;
@@ -42,7 +38,87 @@ export const useStatusStore = defineStore("status-store", {
           this.nonFieldErrors = "Unauthorised";
         }
         if (error.response.status === 403) {
-          error.nonFieldErrors = error.response.data.error;
+          this.nonFieldErrors = error.response.data.error;
+        }
+        if (error.response.status === 404) {
+          this.nonFieldErrors = "Not Found";
+        }
+        if (error.response.status == 422) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
+        }
+        if (error.response.status === 500) {
+          this.nonFieldErrors = "Internal Error";
+        }
+      }
+    },
+    async updateStatus(body, accessToken) {
+      try {
+        //reset
+        this.pending = true;
+        this.responseOK = false;
+        this.nonFieldErrors = null;
+        this.fieldErrors = null;
+        const response = await API().put(`/status/${body.id}`, body, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        this.pending = false;
+        this.statuses = response.data.data;
+        console.log(this.statuses);
+        this.responseOK = true;
+      } catch (error) {
+        this.pending = false;
+        console.log(error);
+        if (error.response.status == 400) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
+        }
+        if (error.response.status == 401) {
+          this.nonFieldErrors = "Unauthorised";
+        }
+        if (error.response.status === 403) {
+          this.nonFieldErrors = error.response.data;
+        }
+        if (error.response.status === 404) {
+          this.nonFieldErrors = "Not Found";
+        }
+        if (error.response.status === 500) {
+          this.nonFieldErrors = "Internal Error";
+        }
+      }
+    },
+    async deleteStatus(id, accessToken) {
+      try {
+        //reset
+        this.pending = true;
+        this.responseOK = false;
+        this.nonFieldErrors = null;
+        this.fieldErrors = null;
+        const response = await API().delete(`/status/${id.id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        this.pending = false;
+        this.statuses = response.data.data;
+        console.log(this.statuses);
+        this.responseOK = true;
+      } catch (error) {
+        this.pending = false;
+        console.log(error);
+        if (error.response.status == 400) {
+          this.fieldErrors = error.response.data;
+        }
+        if (error.response.status == 401) {
+          this.nonFieldErrors = "Unauthorised";
+        }
+        if (error.response.status === 403) {
+          this.nonFieldErrors = error.response.data;
+        }
+        if (error.response.status === 404) {
+          this.nonFieldErrors = "Not Found";
         }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
