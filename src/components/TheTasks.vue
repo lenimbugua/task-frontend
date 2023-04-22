@@ -4,14 +4,15 @@ import NoData from "./NoData.vue";
 import { useTaskStore } from "../stores/tasks.js";
 import { useLoginStore } from "../stores/login.js";
 import { formatDate } from "../utils/dates";
+import swal from "sweetalert2";
 
 import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-const { fetchTasks, setSelectedTask } = useTaskStore();
-const { tasks, pending } = storeToRefs(useTaskStore());
+const { fetchTasks, setSelectedTask, deleteTask } = useTaskStore();
+const { tasks, pending, responseOK } = storeToRefs(useTaskStore());
 const { user: authUser } = storeToRefs(useLoginStore());
 
 const token = authUser.value.token;
@@ -19,8 +20,30 @@ const token = authUser.value.token;
 fetchTasks(token);
 
 const goToUpdateTask = (task) => {
-  setSelectedTask(task);
+  setSelectedTask(task.id);
   router.push({ name: "update-task" });
+};
+const removeTask = async (taskID) => {
+  swal
+    .fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3DA5E9",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    })
+    .then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteTask(taskID, token);
+        console.log(taskID);
+        if (responseOK.value) {
+          await fetchTasks(token);
+          swal.fire("Deleted!", "task deleted.", "success");
+        }
+      }
+    });
 };
 </script>
 
@@ -69,7 +92,12 @@ const goToUpdateTask = (task) => {
           >
             Edit
           </td>
-          <td class="py-2 px-3 text-red-500 cursor-pointer">Delete</td>
+          <td
+            class="py-2 px-3 text-red-500 cursor-pointer"
+            @click="removeTask(task.id)"
+          >
+            Delete
+          </td>
         </tr>
       </tbody>
     </table>

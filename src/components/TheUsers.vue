@@ -1,16 +1,28 @@
 <script setup>
 import { useUserStore } from "../stores/users.js";
 import { useLoginStore } from "../stores/login.js";
+import { formatDate } from "../utils/dates";
 
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
-const { fetchUsers } = useUserStore();
+const { fetchUsers, setSelectedUser } = useUserStore();
 const { users } = storeToRefs(useUserStore());
 const { user: authUser } = storeToRefs(useLoginStore());
 
 const token = authUser.value.token;
 
 fetchUsers(token);
+const goToAssignTask = (user) => {
+  setSelectedUser(user.id);
+  router.push({ name: "assign-task" });
+};
+
+const goToViewUserTasks = (user) => {
+  setSelectedUser(user.id);
+  router.push({ name: "user-tasks" });
+};
 </script>
 
 <template>
@@ -31,16 +43,21 @@ fetchUsers(token);
         <td class="py-2 px-3">{{ index + 1 }}</td>
         <td class="py-2 px-3">{{ user.name }}</td>
         <td class="py-2 px-3">{{ user.email }}</td>
-        <td class="py-2 px-3">{{ user.created_at }}</td>
-        <td class="py-2 px-3">{{ user.updated_at }}</td>
-        <td class="py-2 px-3 cursor-pointer text-sky-500">view</td>
+        <td class="py-2 px-3">{{ formatDate(user.created_at) }}</td>
+        <td class="py-2 px-3">{{ formatDate(user.updated_at) }}</td>
+        <td
+          class="py-2 px-3 cursor-pointer text-sky-500"
+          @click="goToViewUserTasks(user)"
+        >
+          view
+        </td>
         <td class="py-2 px-3">
-          <RouterLink
-            :to="{ name: 'assign-task' }"
+          <div
             class="text-sky-50 flex justify-center p-1 items-center bg-sky-500 shadow-lg mx-auto rounded-md cursor-pointer"
+            @click="goToAssignTask(user)"
           >
             Assign
-          </RouterLink>
+          </div>
         </td>
       </tr>
     </tbody>

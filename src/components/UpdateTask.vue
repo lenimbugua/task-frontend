@@ -38,7 +38,7 @@ const createStatus = async () => {
 
   if (responseOK.value) {
     await fetchTasks(token);
-    swal.fire("Task updated!", "Good Job");
+    swal.fire("Task updated!", "Great!");
     router.push({ name: "tasks" });
   }
 };
@@ -146,7 +146,7 @@ onBeforeUnmount(() => {
         class="mt-3 inline-flex rounded-lg text-sm font-semibold py-2.5 px-4 text-sky-50 bg-sky-500 hover:text-sky-50/80 hover:bg-sky-600"
       >
         <spin v-if="pending" />
-        <span v-else>Add Status</span>
+        <span v-else>Update Task</span>
       </button>
     </form>
   </div>

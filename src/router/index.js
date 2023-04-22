@@ -13,6 +13,7 @@ import Tasks from "@/views/Tasks.vue";
 import AddTask from "@/views/AddTask.vue";
 import UpdateTask from "@/views/UpdateTask.vue";
 import AssignTask from "@/views/AssignTask.vue";
+import UserTasks from "@/views/UserTasks.vue";
 
 import Status from "@/views/Status.vue";
 import AddStatus from "@/views/AddStatus.vue";
@@ -43,6 +44,12 @@ const routes = [
         name: "assign-task",
         component: AssignTask,
         meta: { title: "Assign Task", requiresAuth: true },
+      },
+      {
+        path: "user-tasks",
+        name: "user-tasks",
+        component: UserTasks,
+        meta: { title: "User Tasks", requiresAuth: true },
       },
       {
         path: "tasks",

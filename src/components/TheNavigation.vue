@@ -18,7 +18,7 @@ const activeClass = (routeName) => {
 </script>
 <template>
   <div
-    class="fixed w-52 left-0 top-0 bottom-0 border-r bg-sky-700 overflow-scroll"
+    class="fixed w-52 left-0 top-0 bottom-0 border-r bg-sky-700 overflow-scroll z-50"
   >
     <div class="w-full p-3 italic text-white text-2xl mx-auto">
       Manage Tasks

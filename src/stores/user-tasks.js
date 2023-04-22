@@ -1,25 +1,25 @@
 import { defineStore } from "pinia";
 import API from "../services/API";
 
-export const useTaskStore = defineStore("task-store", {
+export const useUserTaskStore = defineStore("user-task-store", {
   state: () => ({
     pending: false,
     fieldErrors: null,
     nonFieldErrors: null,
     responseOK: false,
-    tasks: null,
-    selectedTask: null,
+    userTasks: null,
+    selectedUserTask: null,
   }),
 
   actions: {
-    async addTask(body, accessToken) {
+    async assignUserTask(body, accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().post(`/task`, body, {
+        const response = await API().post(`/user-task`, body, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -49,7 +49,7 @@ export const useTaskStore = defineStore("task-store", {
         }
       }
     },
-    async updateTask(body, accessToken) {
+    async updateUserTask(body, accessToken) {
       try {
         //reset
         this.pending = true;
@@ -57,7 +57,7 @@ export const useTaskStore = defineStore("task-store", {
         this.nonFieldErrors = null;
         this.fieldErrors = null;
         const response = await API().put(
-          `/task/${body.id}`,
+          `/user-task/${body.id}`,
           { body },
           {
             headers: {
@@ -88,19 +88,19 @@ export const useTaskStore = defineStore("task-store", {
         }
       }
     },
-    async fetchTasks(token) {
+    async fetchUserTasks(userID,token) {
       try {
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
-        const response = await API().get(`/task`, {
+        const response = await API().get(`/user-task/${userID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         this.pending = false;
         this.nonFieldErrors = null;
-        this.tasks = response.data.data;
+        this.userTasks = response.data.data;
       } catch (error) {
         this.pending = false;
         console.log(error);
