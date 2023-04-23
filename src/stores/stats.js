@@ -1,36 +1,42 @@
 import { defineStore } from "pinia";
 import API from "../services/API";
 
-export const useUserTaskStore = defineStore("user-task-store", {
+export const useStatsStore = defineStore("stats-store", {
   state: () => ({
     pending: false,
     fieldErrors: null,
     nonFieldErrors: null,
     responseOK: false,
-    userTasks: null,
-    selectedUserTask: null,
+    totalUsers: null,
+    totalUserTasks: null,
+    totalInProgressTasks: null,
+    totalCompletedTasks: null,
+    totalExpiredTasks: null,
+    selectedStatus: null,
   }),
 
   actions: {
-    async assignUserTask(body, accessToken) {
+    async getTotalUsers(accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().post(`/user-task`, body, {
+        const response = await API().get(`/count-users`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         this.pending = false;
-        console.log(response);
+        this.totalUsers = response.data.count;
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
         if (error.response.status == 400) {
-          this.fieldErrors = error.response.data;
+          this.fieldErrors = error.response.data.errors;
+          console.log(this.fieldErrors);
         }
         if (error.response.status == 401) {
           this.nonFieldErrors = "Unauthorised";
@@ -41,37 +47,36 @@ export const useUserTaskStore = defineStore("user-task-store", {
         if (error.response.status === 404) {
           this.nonFieldErrors = "Not Found";
         }
-        if (error.response.status === 422) {
+        if (error.response.status == 422) {
           this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
         }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
         }
       }
     },
-    async updateUserTask(body, accessToken) {
+    async getTotalUserTasks(accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().put(
-          `/user-task/${body.id}`,
-          { body },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await API().get(`/count-user-tasks`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         this.pending = false;
-        console.log(response);
+        this.totalUserTasks = response.data.count;
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
         if (error.response.status == 400) {
-          this.fieldErrors = error.response.data;
+          this.fieldErrors = error.response.data.errors;
+          console.log(this.fieldErrors);
         }
         if (error.response.status == 401) {
           this.nonFieldErrors = "Unauthorised";
@@ -82,149 +87,147 @@ export const useUserTaskStore = defineStore("user-task-store", {
         if (error.response.status === 404) {
           this.nonFieldErrors = "Not Found";
         }
+        if (error.response.status == 422) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
+        }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
         }
       }
     },
-    async fetchUserTasks(userID, token) {
-      try {
-        this.pending = true;
-        this.responseOK = false;
-        this.nonFieldErrors = null;
-        const response = await API().get(`/user-task/${userID}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.pending = false;
-        this.nonFieldErrors = null;
-        this.userTasks = response.data.data;
-      } catch (error) {
-        this.pending = false;
-        console.log(error);
-        if (error?.response?.status === 400) {
-          this.error = "There was an error";
-        }
-        if (error?.response?.status === 401) {
-          this.error = "Unauthorised";
-        }
-      }
-    },
-    async deleteTask(id, accessToken) {
+
+    async getTotalDoneTasks(accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().delete(`/user-task/${id}`, {
+        const response = await API().get(`/count-user-tasks/done`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         this.pending = false;
-        console.log(response);
+        this.totalCompletedTasks = response.data.count;
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
-        console.log(error);
         if (error.response.status == 400) {
-          this.fieldErrors = error.response.data;
+          this.fieldErrors = error.response.data.errors;
+          console.log(this.fieldErrors);
         }
         if (error.response.status == 401) {
           this.nonFieldErrors = "Unauthorised";
         }
         if (error.response.status === 403) {
-          this.nonFieldErrors = error.response.data;
+          this.nonFieldErrors = error.response.data.error;
         }
         if (error.response.status === 404) {
           this.nonFieldErrors = "Not Found";
+        }
+        if (error.response.status == 422) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
         }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
         }
       }
     },
-    async startTask(body, accessToken) {
+    async getTotalInProgressTasks(accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().put(`/user-task/start`, body, {
+        const response = await API().get(`/count-user-tasks/In-Progress`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         this.pending = false;
-        console.log(response);
+        this.totalInProgressTasks = response.data.count;
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
-        console.log(error);
         if (error.response.status == 400) {
-          this.fieldErrors = error.response.data;
+          this.fieldErrors = error.response.data.errors;
+          console.log(this.fieldErrors);
         }
         if (error.response.status == 401) {
           this.nonFieldErrors = "Unauthorised";
         }
         if (error.response.status === 403) {
-          this.nonFieldErrors = error.response.data;
+          this.nonFieldErrors = error.response.data.error;
         }
         if (error.response.status === 404) {
           this.nonFieldErrors = "Not Found";
+        }
+        if (error.response.status == 422) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
         }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
         }
       }
     },
-    async endTask(body, accessToken) {
+
+    async getTotalExpiredTasks(accessToken) {
       try {
         //reset
         this.pending = true;
         this.responseOK = false;
         this.nonFieldErrors = null;
         this.fieldErrors = null;
-        const response = await API().put(`/user-task/end`, body, {
+        const response = await API().get(`count-expired-user-tasks`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         this.pending = false;
-        console.log(response);
+        this.totalExpiredTasks = response.data.count;
         this.responseOK = true;
       } catch (error) {
+        console.log(error.response);
         this.pending = false;
-        console.log(error);
         if (error.response.status == 400) {
-          this.fieldErrors = error.response.data;
+          this.fieldErrors = error.response.data.errors;
+          console.log(this.fieldErrors);
         }
         if (error.response.status == 401) {
           this.nonFieldErrors = "Unauthorised";
         }
         if (error.response.status === 403) {
-          this.nonFieldErrors = error.response.data;
+          this.nonFieldErrors = error.response.data.error;
         }
         if (error.response.status === 404) {
           this.nonFieldErrors = "Not Found";
+        }
+        if (error.response.status == 422) {
+          this.fieldErrors = error.response.data;
+          console.log(this.fieldErrors);
         }
         if (error.response.status === 500) {
           this.nonFieldErrors = "Internal Error";
         }
       }
     },
+
     clearErrors() {
       this.fieldErrors = null;
       this.nonFieldErrors = null;
     },
-    setSelectedTask(task) {
-      this.selectedTask = task;
+    setSelectedStatus(status) {
+      this.selectedStatus = status;
     },
-    resetSelectedTask() {
-      this.selectedTask = null;
+    resetSelectedStatus() {
+      this.selectedStatus = null;
     },
   },
   persist: true,

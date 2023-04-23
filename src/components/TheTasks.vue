@@ -20,7 +20,7 @@ const token = authUser.value.token;
 fetchTasks(token);
 
 const goToUpdateTask = (task) => {
-  setSelectedTask(task.id);
+  setSelectedTask(task);
   router.push({ name: "update-task" });
 };
 const removeTask = async (taskID) => {
